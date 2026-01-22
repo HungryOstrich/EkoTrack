@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EkoTrack.Controllers
 {
+    [Authorize]
     public class ActivityLogsController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EkoTrack.Data;
 using EkoTrack.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EkoTrack.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class EmissionSourcesController : Controller
     {
         private readonly ApplicationDbContext _context;

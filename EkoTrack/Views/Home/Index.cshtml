@@ -33,16 +33,21 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card stat-card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <h6 class="text-uppercase text-muted small fw-bold">Active Sources</h6>
-                    <h2 class="mb-0 fw-bold text-success">@Model.ReductionProgress</h2>
-                    <p class="text-muted mb-0 mt-2">Monitored entities</p>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-md-3">
+                <div class="card stat-card border-0 shadow-sm h-100 border-start border-success border-4">
+                    <div class="card-body">
+                        <h6 class="text-uppercase text-muted small fw-bold">Active Sources</h6>
+                        <h2 class="mb-0 fw-bold text-success">@Model.ReductionProgress</h2>
+                        <p class="text-muted mb-0 mt-2">Monitored entities (Admin)</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
+        }
+
+        <div class="col-md-@(User.IsInRole("Admin") ? "3" : "6")">
             <div class="card stat-card border-0 shadow-sm h-100 bg-success text-white">
                 <div class="card-body">
                     <h6 class="text-uppercase text-white-50 small fw-bold">Carbon Offset</h6>
@@ -60,7 +65,11 @@
                 <p class="lead text-muted">Navigate to your activity logs to update today's data or review the latest emission factors for your organization.</p>
                 <div class="d-flex gap-3 justify-content-center mt-4">
                     <a asp-controller="ActivityLogs" asp-action="Index" class="btn btn-dark px-5 py-2 rounded-pill">Activity Logs</a>
-                    <a asp-controller="EmissionFactors" asp-action="Index" class="btn btn-outline-success px-5 py-2 rounded-pill">Emission Factors</a>
+                    
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="EmissionFactors" asp-action="Index" class="btn btn-outline-success px-5 py-2 rounded-pill">Emission Factors</a>
+                    }
                 </div>
             </div>
         </div>

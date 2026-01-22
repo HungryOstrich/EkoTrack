@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using EkoTrack.Data;
 using EkoTrack.Models;
 using EkoTrack.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EkoTrack.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
