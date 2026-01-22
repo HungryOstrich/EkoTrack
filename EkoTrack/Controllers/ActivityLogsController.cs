@@ -27,14 +27,12 @@ namespace EkoTrack.Controllers
         // GET: ActivityLogs
         public async Task<IActionResult> Index()
         {
-            // 1. Pobierz ID zalogowanego użytkownika
             var userId = GetUserId();
 
             var logs = await _context.ActivityLogs
                 .Include(a => a.EmissionSource)
                 .Include(a => a.EmissionFactor)
-                // .Include(a => a.CreatedBy) // Nie jest już potrzebne, jeśli nie wyświetlamy nazwy
-                .Where(a => a.CreatedById == userId) // <--- 2. KLUCZOWY FILTR
+                .Where(a => a.CreatedById == userId) 
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -82,7 +80,6 @@ namespace EkoTrack.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Jeśli kod dotrze tutaj, warto podejrzeć błędy podczas debugowania
             PopulateDropDowns(activityLog.EmissionSourceId, activityLog.EmissionFactorId);
             return View(activityLog);
         }
@@ -106,27 +103,46 @@ namespace EkoTrack.Controllers
         {
             if (id != activityLog.Id) return NotFound();
 
-           
-            var factor = await _context.EmissionFactors.FindAsync(activityLog.EmissionFactorId);
-
-            if (factor != null)
-            {
-                activityLog.EmissionFactor = factor;
-               
-                activityLog.CalculateEmission();
-            }
+            ModelState.Remove("CreatedById");
+            ModelState.Remove("CreatedBy");
+            ModelState.Remove("EmissionFactor");
+            ModelState.Remove("EmissionSource");
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(activityLog);
+                  
+                    var existingLog = await _context.ActivityLogs
+                        .FirstOrDefaultAsync(x => x.Id == id);
+
+                    if (existingLog == null) return NotFound();
+
+                    existingLog.Date = activityLog.Date;
+                    existingLog.Quantity = activityLog.Quantity;
+                    existingLog.EmissionSourceId = activityLog.EmissionSourceId;
+                    existingLog.EmissionFactorId = activityLog.EmissionFactorId;
+
+              
+                    var factor = await _context.EmissionFactors.FindAsync(activityLog.EmissionFactorId);
+                    if (factor != null)
+                    {
+                        existingLog.EmissionFactor = factor;
+                        existingLog.CalculateEmission();
+                    }
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ActivityLogExists(activityLog.Id)) return NotFound();
-                    else throw;
+                    if (!ActivityLogExists(activityLog.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -171,7 +187,7 @@ namespace EkoTrack.Controllers
         private void PopulateDropDowns(int? selectedSource = null, int? selectedFactor = null)
         {
             ViewData["EmissionSourceId"] = new SelectList(_context.EmissionSources, "Id", "Name", selectedSource);
-            // Wyświetlamy nazwę czynnika wraz z jednostką dla czytelności
+
             ViewData["EmissionFactorId"] = new SelectList(_context.EmissionFactors.Select(x => new
             {
                 Id = x.Id,
