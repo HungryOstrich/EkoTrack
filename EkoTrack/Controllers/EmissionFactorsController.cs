@@ -51,9 +51,6 @@ namespace EkoTrack.Controllers
             return View();
         }
 
-        // POST: EmissionFactors/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Unit,Co2EquivalentPerUnit,Year,IsActive")] EmissionFactor emissionFactor)
@@ -83,9 +80,7 @@ namespace EkoTrack.Controllers
             return View(emissionFactor);
         }
 
-        // POST: EmissionFactors/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: EmissionFactors/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Unit,Co2EquivalentPerUnit,Year,IsActive")] EmissionFactor emissionFactor)

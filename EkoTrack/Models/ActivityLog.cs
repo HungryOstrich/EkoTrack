@@ -13,7 +13,7 @@ namespace EkoTrack.Models
 
         [Required]
         [Range(0.01, double.MaxValue, ErrorMessage = "Zużycie musi być większe od 0.")]
-        public double Quantity { get; set; } // Ilość zużytego zasobu (np. litry paliwa)
+        public double Quantity { get; set; } 
         public double CalculatedCo2Emission { get; private set; }
 
         // Powiązanie ze źródłem
@@ -40,7 +40,7 @@ namespace EkoTrack.Models
         // --- Logika Walidacji Biznesowej (IValidatableObject) ---
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            // 1. Walidacja daty (nie może być z przyszłości)
+
             if (Date > DateTime.Now)
             {
                 yield return new ValidationResult(
@@ -48,8 +48,6 @@ namespace EkoTrack.Models
                     new[] { nameof(Date) });
             }
 
-            // 2. Blokada wpisów wstecznych (np. starszych niż 30 dni) - zgodnie z wymogami projektu
-            // Symulacja zamkniętego okresu rozliczeniowego
             if (Date < DateTime.Now.AddDays(-30))
             {
                 yield return new ValidationResult(
@@ -57,8 +55,6 @@ namespace EkoTrack.Models
                     new[] { nameof(Date) });
             }
 
-            // 3. Sprawdzenie spójności jednostek (uproszczone)
-            // W pełnej implementacji sprawdzalibyśmy czy jednostka Source pasuje do Factor
         }
     }
 }

@@ -17,13 +17,9 @@ namespace EkoTrack.DTOs
 
         [StringLength(200)]
         public string Address { get; set; }
-
-        // Read-only property for view display
         public int UsersCount { get; set; }
 
         public OrganizationDTO() { }
-
-        // Constructor to map Entity -> DTO
         public OrganizationDTO(Organization org)
         {
             Id = org.Id;

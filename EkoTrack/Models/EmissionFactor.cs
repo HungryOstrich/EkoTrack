@@ -14,9 +14,9 @@ namespace EkoTrack.Models
 
         [Required]
         [Range(0.0001, double.MaxValue, ErrorMessage = "Współczynnik musi być dodatni.")]
-        public double Co2EquivalentPerUnit { get; set; } // Wartość przelicznika
+        public double Co2EquivalentPerUnit { get; set; } 
 
-        public int Year { get; set; } // Rok obowiązywania współczynnika
+        public int Year { get; set; }
 
         public bool IsActive { get; set; } = true;
     }

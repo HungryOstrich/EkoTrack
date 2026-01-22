@@ -6,7 +6,7 @@ namespace EkoTrack.DTOs
     public class ActivityLogDTO
     {
         public int Id { get; set; }
-        public string DateFormatted { get; set; } // Data jako string (np. "2023-10-15")
+        public string DateFormatted { get; set; } 
         public double Quantity { get; set; }
         public double CalculatedCo2 { get; set; }
         public int EmissionSourceId { get; set; }

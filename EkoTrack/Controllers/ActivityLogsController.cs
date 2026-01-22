@@ -24,7 +24,6 @@ namespace EkoTrack.Controllers
         }
 
         // GET: ActivityLogs
-        // GET: ActivityLogs
         public async Task<IActionResult> Index()
         {
             var userId = GetUserId();

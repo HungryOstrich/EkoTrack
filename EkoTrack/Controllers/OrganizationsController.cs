@@ -21,12 +21,10 @@ namespace EkoTrack.Controllers
         // GET: Organizations
         public async Task<IActionResult> Index()
         {
-            // Fetch entities including Users to calculate the count
+
             var organizations = await _context.Organizations
                 .Include(o => o.Users)
                 .ToListAsync();
-
-            // Map Entity list to DTO list
             var dtos = organizations.Select(o => new OrganizationDTO(o)).ToList();
 
             return View(dtos);
@@ -163,35 +161,25 @@ namespace EkoTrack.Controllers
             return _context.Organizations.Any(e => e.Id == id);
         }
 
-        
-        
-            // ... existing constructor and methods
-
             // GET: Organizations/ManageUsers/5
             public async Task<IActionResult> ManageUsers(int? id)
             {
                 if (id == null) return NotFound();
 
-                // Load organization with its current users
                 var organization = await _context.Organizations
                     .Include(o => o.Users)
                     .FirstOrDefaultAsync(m => m.Id == id);
 
                 if (organization == null) return NotFound();
 
-                // Get ALL users from the database
                 var allUsers = await _context.Users.ToListAsync();
-
-                // Create a HashSet of current user IDs for efficient lookup
                 var currentMemberIds = organization.Users.Select(u => u.Id).ToHashSet();
-
-                // Filter users who are NOT currently in this organization
                 var availableUsers = allUsers
                     .Where(u => !currentMemberIds.Contains(u.Id))
                     .Select(u => new SelectListItem
                     {
                         Value = u.Id,
-                        Text = u.Email // Or u.UserName
+                        Text = u.Email
                     }).ToList();
 
                 var viewModel = new OrganizationUser

@@ -55,8 +55,6 @@ namespace EkoTrack.Controllers
         }
 
         // POST: EmissionSources/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Type,Description,OrganizationId")] EmissionSource emissionSource)
@@ -89,8 +87,6 @@ namespace EkoTrack.Controllers
         }
 
         // POST: EmissionSources/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Type,Description,OrganizationId")] EmissionSource emissionSource)
