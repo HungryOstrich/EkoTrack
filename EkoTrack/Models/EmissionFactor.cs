@@ -7,10 +7,10 @@ namespace EkoTrack.Models
         public int Id { get; set; }
 
         [Required]
-        public string Name { get; set; } // np. "Diesel B7", "Energia elektryczna - Mix PL"
+        public string Name { get; set; } 
 
         [Required]
-        public string Unit { get; set; } // np. "litry", "kWh"
+        public string Unit { get; set; }
 
         [Required]
         [Range(0.0001, double.MaxValue, ErrorMessage = "Współczynnik musi być dodatni.")]

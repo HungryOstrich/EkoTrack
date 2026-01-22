@@ -13,13 +13,15 @@ namespace EkoTrack.Models
         [StringLength(200)]
         public string Address { get; set; }
 
-        [Required]
-        public string TaxId { get; set; } // NIP
+        [Required(ErrorMessage = "NIP jest wymagany.")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "NIP musi składać się z 10 cyfr.")]
+        
+        public string TaxId { get; set; }
 
-        // Relacja: Jeden-do-wielu z EmissionSource
+
         public virtual ICollection<EmissionSource> EmissionSources { get; set; } = new List<EmissionSource>();
 
-        // Relacja: Wiele-do-wielu z AppUser
+        
         public virtual ICollection<AppUser> Users { get; set; } = new List<AppUser>();
     }
 }
