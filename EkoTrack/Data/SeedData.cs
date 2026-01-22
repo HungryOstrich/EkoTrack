@@ -13,7 +13,7 @@ public class SeedData
             
         const string adminRole = "Admin";
         const string adminEmail = "admin@admin.com";
-        const string adminPassword = "Admin123!"; 
+        const string adminPassword = "Password123!"; 
 
         if (await roleManager.FindByNameAsync(adminRole) == null)
         {
