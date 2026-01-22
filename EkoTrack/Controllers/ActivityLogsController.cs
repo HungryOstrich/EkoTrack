@@ -22,16 +22,20 @@ namespace EkoTrack.Controllers
         }
 
         // GET: ActivityLogs
+        // GET: ActivityLogs
         public async Task<IActionResult> Index()
         {
-            
+            // 1. Pobierz ID zalogowanego użytkownika
+            var userId = GetUserId();
+
             var logs = await _context.ActivityLogs
                 .Include(a => a.EmissionSource)
                 .Include(a => a.EmissionFactor)
-                .AsNoTracking() 
+                // .Include(a => a.CreatedBy) // Nie jest już potrzebne, jeśli nie wyświetlamy nazwy
+                .Where(a => a.CreatedById == userId) // <--- 2. KLUCZOWY FILTR
+                .AsNoTracking()
                 .ToListAsync();
 
-            
             var dtos = logs.Select(log => new ActivityLogDTO(log)).ToList();
 
             return View(dtos);
@@ -47,15 +51,21 @@ namespace EkoTrack.Controllers
         // POST: ActivityLogs/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+      
         public async Task<IActionResult> Create([Bind("Date,Quantity,EmissionSourceId,EmissionFactorId")] ActivityLog activityLog)
         {
-          
+            activityLog.CreatedById = GetUserId();
+
+            ModelState.Remove(nameof(activityLog.CreatedById));
+            ModelState.Remove(nameof(activityLog.CreatedBy));
+            ModelState.Remove(nameof(activityLog.EmissionFactor));
+            ModelState.Remove(nameof(activityLog.EmissionSource));
+
             var factor = await _context.EmissionFactors.FindAsync(activityLog.EmissionFactorId);
 
             if (factor != null)
             {
                 activityLog.EmissionFactor = factor;
-               
                 activityLog.CalculateEmission();
             }
             else
@@ -70,7 +80,7 @@ namespace EkoTrack.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Jeśli walidacja nie przejdzie (np. data z przyszłości), wracamy do formularza
+            // Jeśli kod dotrze tutaj, warto podejrzeć błędy podczas debugowania
             PopulateDropDowns(activityLog.EmissionSourceId, activityLog.EmissionFactorId);
             return View(activityLog);
         }

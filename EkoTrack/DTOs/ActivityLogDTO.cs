@@ -1,4 +1,5 @@
-﻿using EkoTrack.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using EkoTrack.Models;
 
 namespace EkoTrack.DTOs
 {
@@ -8,10 +9,10 @@ namespace EkoTrack.DTOs
         public string DateFormatted { get; set; } // Data jako string (np. "2023-10-15")
         public double Quantity { get; set; }
         public double CalculatedCo2 { get; set; }
-
-        // Informacje o źródle
         public int EmissionSourceId { get; set; }
         public string SourceName { get; set; }
+        public string CreatedById { get; set; }
+        public virtual AppUser? CreatedBy { get; set; }
 
         // Informacje o czynniku (paliwie)
         public int EmissionFactorId { get; set; }
@@ -26,6 +27,8 @@ namespace EkoTrack.DTOs
             DateFormatted = log.Date.ToShortDateString();
             Quantity = log.Quantity;
             CalculatedCo2 = log.CalculatedCo2Emission;
+            CreatedById = log.CreatedById;
+            CreatedBy = log.CreatedBy;
 
             EmissionSourceId = log.EmissionSourceId;
             EmissionFactorId = log.EmissionFactorId;
